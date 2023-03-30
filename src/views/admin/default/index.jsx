@@ -99,7 +99,7 @@ export default function UserReports() {
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
+        columns={{ base: 1, md: 2, lg: 4, "2xl": 6 }}
         gap='20px'
         mb='20px'>
         <MiniStatistics
@@ -130,7 +130,7 @@ export default function UserReports() {
           name='Buying Power'
           value={"$"+account.buying_power}
         />
-        <MiniStatistics growth={`${(account.last_equity-account.equity)/account.equity*100}%`} name='Profit/Loss' value={"$"+(account.last_equity-account.equity)} />
+        <MiniStatistics growth={`${((account.equity-account.last_equity)/account.equity*100).toFixed(2)}%`} name='Profit/Loss' value={"$"+(account.equity-account.last_equity).toFixed(2)} />
         <MiniStatistics
           endContent={
             <Flex me='-16px' mt='10px'>
@@ -152,7 +152,7 @@ export default function UserReports() {
           name='Cash'
           value={"$"+account.cash}
         />
-        <MiniStatistics
+        {/* <MiniStatistics
           startContent={
             <IconBox
               w='56px'
@@ -163,8 +163,8 @@ export default function UserReports() {
           }
           name='New Tasks'
           value='154'
-        />
-        <MiniStatistics
+        /> */}
+        {/* <MiniStatistics
           startContent={
             <IconBox
               w='56px'
@@ -177,7 +177,7 @@ export default function UserReports() {
           }
           name='Total Projects'
           value='2935'
-        />
+        /> */}
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
