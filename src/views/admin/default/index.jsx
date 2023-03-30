@@ -59,6 +59,10 @@ import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 import { iex } from "configs1/iex";
 
+let USDollar = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -114,7 +118,7 @@ export default function UserReports() {
             />
           }
           name='Equity'
-          value={"$"+account.equity}
+          value={USDollar.format(account.equity)}
         />
         <MiniStatistics
           startContent={
@@ -128,9 +132,9 @@ export default function UserReports() {
             />
           }
           name='Buying Power'
-          value={"$"+account.buying_power}
+          value={USDollar.format(account.buying_power)}
         />
-        <MiniStatistics growth={`${((account.equity-account.last_equity)/account.equity*100).toFixed(2)}%`} name='Profit/Loss' value={"$"+(account.equity-account.last_equity).toFixed(2)} />
+        <MiniStatistics growth={((account.equity-account.last_equity)/account.equity*100).toFixed(2)+"%"} name='Profit/Loss' value={USDollar.format(account.equity-account.last_equity)} />
         <MiniStatistics
           endContent={
             <Flex me='-16px' mt='10px'>
@@ -150,7 +154,7 @@ export default function UserReports() {
             </Flex>
           }
           name='Cash'
-          value={"$"+account.cash}
+          value={USDollar.format(account.cash)}
         />
         {/* <MiniStatistics
           startContent={
@@ -180,8 +184,8 @@ export default function UserReports() {
         /> */}
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
-        <TotalSpent />
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
+        <TotalSpent data={portHistory} />
         <WeeklyRevenue />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>

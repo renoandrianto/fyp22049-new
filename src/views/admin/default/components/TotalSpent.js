@@ -10,7 +10,7 @@ import {
 // Custom components
 import Card from "components/card/Card.js";
 import LineChart from "components/charts/LineChart";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 // Assets
@@ -21,10 +21,11 @@ import {
 } from "variables/charts";
 
 export default function TotalSpent(props) {
-  const { ...rest } = props;
-
+  // const { ...rest } = props;
+  const [chartData, setChartData] = useState(props);
+  // console.log(chartData.data.timestamp.map(function(d) { return new Date(d*1000) } ));
+  console.log(chartData.data);
   // Chakra Color Mode
-
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -38,14 +39,18 @@ export default function TotalSpent(props) {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
+  useEffect(() => {
+    console.log("Changed", props);
+    setChartData(props);
+  },[props]);
+
   return (
     <Card
       justifyContent='center'
       align='center'
       direction='column'
       w='100%'
-      mb='0px'
-      {...rest}>
+      mb='0px'>
       <Flex justify='space-between' ps='0px' pe='20px' pt='5px'>
         <Flex align='center' w='100%'>
           <Button
@@ -72,14 +77,13 @@ export default function TotalSpent(props) {
             w='37px'
             h='37px'
             lineHeight='100%'
-            borderRadius='10px'
-            {...rest}>
+            borderRadius='10px'>
             <Icon as={MdBarChart} color={iconColor} w='24px' h='24px' />
           </Button>
         </Flex>
       </Flex>
       <Flex w='100%' flexDirection={{ base: "column", lg: "row" }}>
-        <Flex flexDirection='column' me='20px' mt='28px'>
+        {/* <Flex flexDirection='column' me='20px' mt='28px'>
           <Text
             color={textColor}
             fontSize='34px'
@@ -111,10 +115,10 @@ export default function TotalSpent(props) {
               On track
             </Text>
           </Flex>
-        </Flex>
-        <Box minH='260px' minW='75%' mt='auto'>
+        </Flex> */}
+        <Box minH='400px' minW='100%' mt='auto'>
           <LineChart
-            chartData={lineChartDataTotalSpent}
+            chartData={chartData.data}
             chartOptions={lineChartOptionsTotalSpent}
           />
         </Box>

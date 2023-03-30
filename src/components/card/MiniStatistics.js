@@ -45,7 +45,7 @@ export default function Default(props) {
           </StatNumber>
           {growth ? (
             <Flex align='center'>
-              <Text color='green.500' fontSize='xs' fontWeight='700' me='5px'>
+              <Text color={growth.charAt(0) == '-' ?'red.500':'green.500'} fontSize='xs' fontWeight='700' me='5px'>
                 {growth}
               </Text>
               <Text color='secondaryGray.600' fontSize='xs' fontWeight='400'>
