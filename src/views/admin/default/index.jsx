@@ -72,9 +72,12 @@ export default function UserReports() {
   // const alpaca = new Alpaca();
   const accountUrl = `${iex.base_url}/v2/account`;
   const portHistoryUrl = `${iex.base_url}/v2/account/portfolio/history`;
+  const positionsUrl = `${iex.base_url}/v2/positions`;
   const [account, setAccount] = useState({});
   const [portHistory, setPortHistory] = useState({});
+  const [positions, setPositions] = useState([]);
   useEffect(() => {
+    // Fetch account data
     fetch(accountUrl, {
       headers: {
          "Apca-Api-Key-Id": iex.api_token,
@@ -83,10 +86,10 @@ export default function UserReports() {
     })
     .then((response)=>response.json())
     .then((data) => {
-        console.log(data)
-        setAccount(data)
+        console.log(data);
+        setAccount(data);
     });
-
+    // Fetch portfolio history
     fetch(portHistoryUrl, {
       headers: {
          "Apca-Api-Key-Id": iex.api_token,
@@ -95,8 +98,20 @@ export default function UserReports() {
     })
     .then((response)=>response.json())
     .then((data) => {
-        console.log(data)
-        setPortHistory(data)
+        console.log(data);
+        setPortHistory(data);
+    });
+    // Fetch all positions 
+    fetch(positionsUrl, {
+      headers: {
+         "Apca-Api-Key-Id": iex.api_token,
+         "Apca-Api-Secret-Key": iex.api_secret_key
+      }
+    })
+    .then((response)=>response.json())
+    .then((data) => {
+        console.log("positions", data);
+        setPositions(data);
     });
   }, []);
 
@@ -186,10 +201,10 @@ export default function UserReports() {
 
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
         <TotalSpent data={portHistory} />
-        <WeeklyRevenue />
+        {/* <WeeklyRevenue /> */}
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
+        <CheckTable columnsData={columnsDataCheck} tableData={positions} />
         <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
           <DailyTraffic />
           <PieCard />

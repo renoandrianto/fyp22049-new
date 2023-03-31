@@ -40,7 +40,7 @@ export default function TotalSpent(props) {
     { bg: "whiteAlpha.100" }
   );
   useEffect(() => {
-    console.log("Changed", props);
+    console.log("Changed Chart", props);
     setChartData(props);
   },[props]);
 

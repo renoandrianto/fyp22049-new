@@ -10,7 +10,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   useGlobalFilter,
   usePagination,
@@ -21,11 +21,26 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import Menu from "components/menu/MainMenu";
+
+let USDollar = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
+
+
 export default function CheckTable(props) {
-  const { columnsData, tableData } = props;
+  console.log("table props", props);
+  const [ columnsData, setColumnsData ] = useState(props.columnsData);
+  const [ tableData, setTableData ] = useState([]);
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
+
+  useEffect(() => {
+    console.log("Changed Table", props);
+    setColumnsData(props.columnsData);
+    setTableData(props.tableData);
+  },[props]);
 
   const tableInstance = useTable(
     {
@@ -61,7 +76,7 @@ export default function CheckTable(props) {
           fontSize='22px'
           fontWeight='700'
           lineHeight='100%'>
-          Check Table
+          Positions
         </Text>
         <Menu />
       </Flex>
@@ -94,20 +109,20 @@ export default function CheckTable(props) {
               <Tr {...row.getRowProps()} key={index}>
                 {row.cells.map((cell, index) => {
                   let data = "";
-                  if (cell.column.Header === "NAME") {
+                  if (cell.column.Header === "ASSET") {
                     data = (
                       <Flex align='center'>
-                        <Checkbox
+                        {/* <Checkbox
                           defaultChecked={cell.value[1]}
                           colorScheme='brandScheme'
                           me='10px'
-                        />
+                        /> */}
                         <Text color={textColor} fontSize='sm' fontWeight='700'>
-                          {cell.value[0]}
+                          {cell.value}
                         </Text>
                       </Flex>
                     );
-                  } else if (cell.column.Header === "PROGRESS") {
+                  } else if (cell.column.Header === "PRICE") {
                     data = (
                       <Flex align='center'>
                         <Text
@@ -115,7 +130,7 @@ export default function CheckTable(props) {
                           color={textColor}
                           fontSize='sm'
                           fontWeight='700'>
-                          {cell.value}%
+                          {USDollar.format(cell.value)}
                         </Text>
                       </Flex>
                     );
@@ -125,7 +140,13 @@ export default function CheckTable(props) {
                         {cell.value}
                       </Text>
                     );
-                  } else if (cell.column.Header === "DATE") {
+                  } else if (cell.column.Header === "MARKET VALUE") {
+                    data = (
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                        {cell.value}
+                      </Text>
+                    );
+                  } else if (cell.column.Header === "PROFIT LOSS") {
                     data = (
                       <Text color={textColor} fontSize='sm' fontWeight='700'>
                         {cell.value}
