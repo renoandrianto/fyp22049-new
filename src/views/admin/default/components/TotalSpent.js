@@ -13,6 +13,8 @@ import LineChart from "components/charts/LineChart";
 import React, { useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
+import "assets/css/App.css";
+
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
 import {
@@ -23,9 +25,7 @@ import {
 export default function TotalSpent(props) {
   // const { ...rest } = props;
   const [chartData, setChartData] = useState(props);
-  // console.log(chartData.data.timestamp.map(function(d) { return new Date(d*1000) } ));
   console.log(chartData.data);
-  // Chakra Color Mode
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -53,7 +53,7 @@ export default function TotalSpent(props) {
       mb='0px'>
       <Flex justify='space-between' ps='0px' pe='20px' pt='5px'>
         <Flex align='center' w='100%'>
-          <Button
+          <Button className="my-button"
             bg={boxBg}
             fontSize='sm'
             fontWeight='500'
@@ -64,9 +64,35 @@ export default function TotalSpent(props) {
               color={textColorSecondary}
               me='4px'
             />
-            This month
+            1D
           </Button>
-          <Button
+          <Button className="my-button"
+            bg={boxBg}
+            fontSize='sm'
+            fontWeight='500'
+            color={textColorSecondary}
+            borderRadius='7px'>
+            <Icon
+              as={MdOutlineCalendarToday}
+              color={textColorSecondary}
+              me='4px'
+            />
+            1M
+          </Button>
+          <Button className="my-button"
+            bg={boxBg}
+            fontSize='sm'
+            fontWeight='500'
+            color={textColorSecondary}
+            borderRadius='7px'>
+            <Icon
+              as={MdOutlineCalendarToday}
+              color={textColorSecondary}
+              me='4px'
+            />
+            1Y
+          </Button>
+          <Button 
             ms='auto'
             align='center'
             justifyContent='center'

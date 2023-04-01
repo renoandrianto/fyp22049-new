@@ -6,3 +6,18 @@ body {
 option {
   color: black;
 }
+.table-header-sort-icon {
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+.table-header-sort-icon.asc::before {
+  content: '▲';
+}
+
+.table-header-sort-icon.desc::before {
+  content: '▼';
+}
+.my-button {
+  margin-right: 10px; /* adjust the value as needed */
+}

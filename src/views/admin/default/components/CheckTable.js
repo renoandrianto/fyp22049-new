@@ -11,6 +11,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useMemo, useState, useEffect } from "react";
+
+import "assets/css/App.css";
 import {
   useGlobalFilter,
   usePagination,
@@ -62,7 +64,8 @@ export default function CheckTable(props) {
   } = tableInstance;
   initialState.pageSize = 11;
 
-  const textColor = useColorModeValue("secondaryGray.900", "white");
+  const textColor = useColorModeValue("#secondaryGray.900", "white");
+
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   return (
     <Card
@@ -85,20 +88,30 @@ export default function CheckTable(props) {
           {headerGroups.map((headerGroup, index) => (
             <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, index) => (
-                <Th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  pe='10px'
-                  key={index}
-                  borderColor={borderColor}>
-                  <Flex
-                    justify='space-between'
-                    align='center'
-                    fontSize={{ sm: "10px", lg: "12px" }}
-                    color='gray.400'>
-                    {column.render("Header")}
-                  </Flex>
-                </Th>
-              ))}
+  <Th
+  {...column.getHeaderProps(column.getSortByToggleProps())}
+  pe='10px'
+  key={index}
+  borderColor={borderColor}>
+  <Flex
+    justify='space-between'
+    align='center'
+    fontSize={{ sm: "10px", lg: "12px" }}
+    color='gray.400'>
+    {column.render("Header")}
+    {column.isSorted ? (
+      <span
+        className={`table-header-sort-icon ${
+          column.isSortedDesc ? 'desc' : 'asc'
+        }`}
+        aria-hidden='true'
+      ></span>
+    ) : null}
+  </Flex>
+</Th>
+
+))}
+
             </Tr>
           ))}
         </Thead>
@@ -147,8 +160,9 @@ export default function CheckTable(props) {
                       </Text>
                     );
                   } else if (cell.column.Header === "PROFIT LOSS") {
+                    const textColor1= cell.value >= 0 ? "green.500" : "red.500";
                     data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                      <Text color={textColor1} fontSize='sm' fontWeight='700'>
                         {cell.value}
                       </Text>
                     );
