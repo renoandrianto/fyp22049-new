@@ -196,9 +196,10 @@ export default function ColumnsTable(props) {
                       </Text>
                     );
                   } else if (cell.column.Header === "DATE") {
+                    const dateObj = new Date(cell.value)
                     data = (
                       <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        {cell.value}
+                        {dateObj.toDateString()}
                       </Text>
                     );
                   }
