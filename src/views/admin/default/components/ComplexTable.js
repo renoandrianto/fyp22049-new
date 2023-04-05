@@ -51,7 +51,7 @@ export default function ColumnsTable(props) {
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
 
-  console.log("data DATA", data);
+  // console.log("data DATA", data);
 
   const tableInstance = useTable(
     {
@@ -88,6 +88,8 @@ export default function ColumnsTable(props) {
   // initialState.pageSize = 5;
 
   const textColor = useColorModeValue("secondaryGray.900", "white");
+  const textGreen = useColorModeValue("green.500", "white");
+  const textRed = useColorModeValue("red.500", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   return (
     <Card
@@ -191,8 +193,8 @@ export default function ColumnsTable(props) {
                     );
                   } else if (cell.column.Header === "STATUS") {
                     data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        {cell.value}
+                      <Text color={cell.value == "filled" ? textGreen : textRed} fontSize='sm' fontWeight='700'>
+                        {cell.value == "filled" ? "Filled" : "Not Filled"}
                       </Text>
                     );
                   } else if (cell.column.Header === "DATE") {
