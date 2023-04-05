@@ -73,9 +73,11 @@ export default function UserReports() {
   const accountUrl = `${iex.base_url}/v2/account`;
   const portHistoryUrl = `${iex.base_url}/v2/account/portfolio/history`;
   const positionsUrl = `${iex.base_url}/v2/positions`;
+  const ordersUrl = `${iex.base_url}/v2/orders?status=closed`;
   const [account, setAccount] = useState({});
   const [portHistory, setPortHistory] = useState({});
   const [positions, setPositions] = useState([]);
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
     // Fetch account data
     fetch(accountUrl, {
@@ -113,6 +115,20 @@ export default function UserReports() {
         console.log("positions", data);
         setPositions(data);
     });
+    // Fetch orders
+    fetch(ordersUrl, {
+      headers: {
+         "Apca-Api-Key-Id": iex.api_token,
+         "Apca-Api-Secret-Key": iex.api_secret_key
+      }
+    })
+    .then((response)=>response.json())
+    .then((data) => {
+        console.log("orders", data);
+        setOrders(data.map(order => {order.amount = String(Number(order.filled_avg_price) * Number(order.filled_qty)); return order}));
+        // setOrders(data);
+    });
+
   }, []);
 
   return (
@@ -201,19 +217,21 @@ export default function UserReports() {
 
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
         <TotalSpent data={portHistory} />
+        
         {/* <WeeklyRevenue /> */}
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
         <CheckTable columnsData={columnsDataCheck} tableData={positions} />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
+        {/* <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
           <DailyTraffic />
           <PieCard />
-        </SimpleGrid>
+        </SimpleGrid> */}
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
         <ComplexTable
           columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
+          // tableData={tableDataComplex}
+          tableData={orders}
         />
         <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
           <Tasks />

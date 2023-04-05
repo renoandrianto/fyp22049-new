@@ -38,8 +38,24 @@ export const columnsDataCheck = [
 ];
 export const columnsDataComplex = [
   {
-    Header: "NAME",
-    accessor: "name",
+    Header: "SYMBOL",
+    accessor: "symbol",
+  },
+  {
+    Header: "TYPE",
+    accessor: "side",
+  },
+  {
+    Header: "QUANTITY",
+    accessor: "qty",
+  },
+  {
+    Header: "AVERAGE COST",
+    accessor: "filled_avg_price",
+  },
+  {
+    Header: "AMOUNT",
+    accessor: "amount",
   },
   {
     Header: "STATUS",
@@ -47,10 +63,6 @@ export const columnsDataComplex = [
   },
   {
     Header: "DATE",
-    accessor: "date",
-  },
-  {
-    Header: "PROGRESS",
-    accessor: "progress",
+    accessor: "submitted_at",
   },
 ];

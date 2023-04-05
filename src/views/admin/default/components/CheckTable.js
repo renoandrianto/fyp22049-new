@@ -29,20 +29,20 @@ let USDollar = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-
 export default function CheckTable(props) {
   console.log("table props", props);
-  const [ columnsData, setColumnsData ] = useState(props.columnsData);
-  const [ tableData, setTableData ] = useState([]);
+  // const [ columnsData, setColumnsData ] = useState(props.columnsData);
+  // const [ tableData, setTableData ] = useState(props.tableData);
+  const { columnsData, tableData } = props;
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
 
-  useEffect(() => {
-    console.log("Changed Table", props);
-    setColumnsData(props.columnsData);
-    setTableData(props.tableData);
-  },[props]);
+  // useEffect(() => {
+  //   console.log("Changed Table", props);
+  //   setColumnsData(props.columnsData);
+  //   setTableData(props.tableData);
+  // },[props]);
 
   const tableInstance = useTable(
     {
