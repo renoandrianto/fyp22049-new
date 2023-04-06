@@ -30,6 +30,7 @@ import {
   Select,
   SimpleGrid,
   useColorModeValue,
+  Text
 } from "@chakra-ui/react";
 // Assets
 import Usa from "assets/img/dashboards/usa.png";
@@ -133,6 +134,11 @@ export default function UserReports() {
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      {/* <SimpleGrid
+      
+      >
+        <Text>Trading status:</Text>
+      </SimpleGrid> */}
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 4, "2xl": 6 }}
         gap='20px'
@@ -214,7 +220,6 @@ export default function UserReports() {
           value='2935'
         /> */}
       </SimpleGrid>
-
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
         <TotalSpent data={portHistory} />
         

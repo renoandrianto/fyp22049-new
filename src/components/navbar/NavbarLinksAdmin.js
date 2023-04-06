@@ -2,6 +2,7 @@
 import {
 	Avatar,
 	Button,
+	Container,
 	Flex,
 	Icon,
 	Image,
@@ -22,7 +23,7 @@ import React from 'react';
 // Assets
 import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
-import { FaEthereum } from 'react-icons/fa';
+import { FaEthereum, FaCheckCircle } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 export default function HeaderLinks(props) {
@@ -51,7 +52,22 @@ export default function HeaderLinks(props) {
 			p="10px"
 			borderRadius="30px"
 			boxShadow={shadow}>
-			<SearchBar mb={secondary ? { base: '10px', md: 'unset' } : 'unset'} me="10px" borderRadius="30px" />
+			{/* <SearchBar mb={secondary ? { base: '10px', md: 'unset' } : 'unset'} me="10px" borderRadius="30px" /> */}
+			<Container pe="1px" w="max-content" color={ethColor} fontSize="sm" fontWeight="700" me="6px">
+				Trading Status:
+			</Container>
+			<Flex
+				bg={ethBg}
+				borderRadius="30px"
+				me="12px"
+				p="6px"
+				align="center"
+				ms="auto">
+				<Flex align="center" justify="center" bg={ethBox} h="29px" w="29px" borderRadius="30px" me="7px">
+					<Icon color={"green"} w="14px" h="14px" as={FaCheckCircle} />
+				</Flex>
+				<Text pe="10px">Running</Text>
+			</Flex>
 			<Flex
 				bg={ethBg}
 				display={secondary ? 'flex' : 'none'}
