@@ -217,15 +217,14 @@ export default function UserReports() {
           value='2935'
         /> */}
       </SimpleGrid>
-<SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
-  <TotalSpent
-    data={portHistory}
-    dailyUrl={portHistoryUrlD}
-    monthlyUrl={portHistoryUrl}
-    yearlyUrl={portHistoryUrlY}
-  />
-</SimpleGrid>
-
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
+        <TotalSpent
+          data={portHistory}
+          dailyUrl={portHistoryUrlD}
+          monthlyUrl={portHistoryUrl}
+          yearlyUrl={portHistoryUrlY}
+        />
+      </SimpleGrid>
       {/* <SimpleGrid columns={{ base: 1, md: 2, lg: 4, "2xl": 6 }} gap="20px" mb="20px">
         <Box>
           <Button onClick={() => fetchPortHistory("1d")}>1D</Button>
@@ -233,12 +232,6 @@ export default function UserReports() {
           <Button onClick={() => fetchPortHistory("1y")}>1Y</Button>
         </Box>
       </SimpleGrid> */}
-
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
-        <TotalSpent data={portHistory} />
-        
-        {/* <WeeklyRevenue /> */}
-      </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
         <CheckTable columnsData={columnsDataCheck} tableData={positions} />
         {/* <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
