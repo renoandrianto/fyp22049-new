@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 import "assets/css/App.css";
+import { iex } from "configs1/iex";
 
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
@@ -39,6 +40,19 @@ export default function TotalSpent(props) {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
+  const fetchData = (url) => {
+    fetch(url, {
+      headers: {
+        "Apca-Api-Key-Id": iex.api_token,
+        "Apca-Api-Secret-Key": iex.api_secret_key,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setChartData({ data });
+      });
+  };
+  
   useEffect(() => {
     console.log("Changed Chart", props);
     setChartData(props);
@@ -54,6 +68,7 @@ export default function TotalSpent(props) {
       <Flex justify='space-between' ps='0px' pe='20px' pt='5px'>
         <Flex align='center' w='100%'>
           <Button className="my-button"
+          onClick={() => fetchData(props.dailyUrl)}
             bg={boxBg}
             fontSize='sm'
             fontWeight='500'
@@ -67,6 +82,7 @@ export default function TotalSpent(props) {
             1D
           </Button>
           <Button className="my-button"
+          onClick={() => fetchData(props.monthlyUrl)}
             bg={boxBg}
             fontSize='sm'
             fontWeight='500'
@@ -80,6 +96,7 @@ export default function TotalSpent(props) {
             1M
           </Button>
           <Button className="my-button"
+          onClick={() => fetchData(props.yearlyrl)}
             bg={boxBg}
             fontSize='sm'
             fontWeight='500'

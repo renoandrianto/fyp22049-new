@@ -1,26 +1,3 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// Chakra imports
 import {
   Avatar,
   Box,
@@ -30,7 +7,7 @@ import {
   Select,
   SimpleGrid,
   useColorModeValue,
-  Text
+  Text, Button
 } from "@chakra-ui/react";
 // Assets
 import Usa from "assets/img/dashboards/usa.png";
@@ -73,12 +50,30 @@ export default function UserReports() {
   // const alpaca = new Alpaca();
   const accountUrl = `${iex.base_url}/v2/account`;
   const portHistoryUrl = `${iex.base_url}/v2/account/portfolio/history`;
+  const portHistoryUrlY = `${iex.base_url}/v2/account/portfolio/history?period=1y`;
+  const portHistoryUrlD= `${iex.base_url}/v2/account/portfolio/history?period=1d`;
+
   const positionsUrl = `${iex.base_url}/v2/positions`;
   const ordersUrl = `${iex.base_url}/v2/orders?status=closed`;
   const [account, setAccount] = useState({});
   const [portHistory, setPortHistory] = useState({});
   const [positions, setPositions] = useState([]);
   const [orders, setOrders] = useState([]);
+  const fetchPortHistory = (period) => {
+    const url = `${iex.base_url}/v2/account/portfolio/history?period=${period}`;
+  
+    fetch(url, {
+      headers: {
+        "Apca-Api-Key-Id": iex.api_token,
+        "Apca-Api-Secret-Key": iex.api_secret_key,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setPortHistory(data);
+      });
+  };
   useEffect(() => {
     // Fetch account data
     fetch(accountUrl, {
@@ -92,18 +87,20 @@ export default function UserReports() {
         console.log(data);
         setAccount(data);
     });
-    // Fetch portfolio history
-    fetch(portHistoryUrl, {
-      headers: {
-         "Apca-Api-Key-Id": iex.api_token,
-         "Apca-Api-Secret-Key": iex.api_secret_key
-      }
-    })
-    .then((response)=>response.json())
-    .then((data) => {
-        console.log(data);
-        setPortHistory(data);
-    });
+    // // Fetch portfolio history
+    // fetch(portHistoryUrl, {
+    //   headers: {
+    //      "Apca-Api-Key-Id": iex.api_token,
+    //      "Apca-Api-Secret-Key": iex.api_secret_key
+    //   }
+    // })
+    // .then((response)=>response.json())
+    // .then((data) => {
+    //     console.log(data);
+    //     setPortHistory(data);
+    // });
+    // Fetch initial portfolio history with a default period (e.g. 1 month)
+    fetchPortHistory("1m");
     // Fetch all positions 
     fetch(positionsUrl, {
       headers: {
@@ -220,6 +217,23 @@ export default function UserReports() {
           value='2935'
         /> */}
       </SimpleGrid>
+<SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
+  <TotalSpent
+    data={portHistory}
+    dailyUrl={portHistoryUrlD}
+    monthlyUrl={portHistoryUrl}
+    yearlyUrl={portHistoryUrlY}
+  />
+</SimpleGrid>
+
+      {/* <SimpleGrid columns={{ base: 1, md: 2, lg: 4, "2xl": 6 }} gap="20px" mb="20px">
+        <Box>
+          <Button onClick={() => fetchPortHistory("1d")}>1D</Button>
+          <Button onClick={() => fetchPortHistory("1m")}>1M</Button>
+          <Button onClick={() => fetchPortHistory("1y")}>1Y</Button>
+        </Box>
+      </SimpleGrid> */}
+
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
         <TotalSpent data={portHistory} />
         
@@ -243,6 +257,7 @@ export default function UserReports() {
           <MiniCalendar h='100%' minW='100%' selectRange={false} />
         </SimpleGrid>
       </SimpleGrid>
-    </Box>
-  );
+    </Box>
+  );
 }
+
