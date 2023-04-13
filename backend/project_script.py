@@ -68,7 +68,7 @@ from project_helpers.download_clean_data import download_and_clean, train_test_m
 
 # while True:
 #     download_and_clean(DP)
-download_and_clean(DP)
+# download_and_clean(DP)
 train_test_model()
 
 # while True:
