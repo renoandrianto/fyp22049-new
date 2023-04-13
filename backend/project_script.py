@@ -64,10 +64,12 @@ from datetime import timedelta
 START_DATE = datetime.now() - timedelta(days=30)
 END_DATE = datetime.now() - timedelta(days=1)
 
-from backend.project_helpers.download_clean_data import download_and_clean
+from project_helpers.download_clean_data import download_and_clean, train_test_model
 
-while True:
-    download_and_clean(DP)
-    
+# while True:
+#     download_and_clean(DP)
+download_and_clean(DP)
+train_test_model()
+
 # while True:
 #     if datetime.now()==
