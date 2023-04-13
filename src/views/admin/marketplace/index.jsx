@@ -1,25 +1,3 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React from "react";
 
 // Chakra imports
@@ -32,14 +10,15 @@ import {
   Text,
   useColorModeValue,
   SimpleGrid,
+  Heading
 } from "@chakra-ui/react";
 
 // Custom components
-import Banner from "views/admin/marketplace/components/Banner";
-import TableTopCreators from "views/admin/marketplace/components/TableTopCreators";
-import HistoryItem from "views/admin/marketplace/components/HistoryItem";
-import NFT from "components/card/NFT";
-import Card from "components/card/Card.js";
+import DesBox from "views/admin/marketplace/components/DesBox";
+// import TableTopCreators from "views/admin/marketplace/components/TableTopCreators";
+// import HistoryItem from "views/admin/marketplace/components/HistoryItem";
+// import NFT from "components/card/NFT";
+// import Card from "components/card/Card.js";
 
 // Assets
 import Nft1 from "assets/img/nfts/Nft1.png";
@@ -62,244 +41,86 @@ export default function Marketplace() {
   return (
     <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
       {/* Main Fields */}
-      <Grid
-        mb='20px'
-        gridTemplateColumns={{ xl: "repeat(3, 1fr)", "2xl": "1fr 0.46fr" }}
-        gap={{ base: "20px", xl: "20px" }}
-        display={{ base: "block", xl: "grid" }}>
-        <Flex
-          flexDirection='column'
-          gridArea={{ xl: "1 / 1 / 2 / 3", "2xl": "1 / 1 / 2 / 2" }}>
-          <Banner />
-          <Flex direction='column'>
-            <Flex
-              mt='45px'
-              mb='20px'
-              justifyContent='space-between'
-              direction={{ base: "column", md: "row" }}
-              align={{ base: "start", md: "center" }}>
-              <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
-                Trending NFTs
-              </Text>
-              <Flex
-                align='center'
-                me='20px'
-                ms={{ base: "24px", md: "0px" }}
-                mt={{ base: "20px", md: "0px" }}>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#art'>
-                  Art
-                </Link>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#music'>
-                  Music
-                </Link>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#collectibles'>
-                  Collectibles
-                </Link>
-                <Link color={textColorBrand} fontWeight='500' to='#sports'>
-                  Sports
-                </Link>
-              </Flex>
-            </Flex>
-            <SimpleGrid columns={{ base: 1, md: 3 }} gap='20px'>
-              <NFT
-                name='Abstract Colors'
-                author='By Esthera Jackson'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft1}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='ETH AI Brain'
-                author='By Nick Wilson'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft2}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='Mesh Gradients '
-                author='By Will Smith'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft3}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-            </SimpleGrid>
-            <Text
-              mt='45px'
-              mb='36px'
-              color={textColor}
-              fontSize='2xl'
-              ms='24px'
-              fontWeight='700'>
-              Recently Added
-            </Text>
-            <SimpleGrid
-              columns={{ base: 1, md: 3 }}
-              gap='20px'
-              mb={{ base: "20px", xl: "0px" }}>
-              <NFT
-                name='Swipe Circles'
-                author='By Peter Will'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft4}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='Colorful Heaven'
-                author='By Mark Benjamin'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft5}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='3D Cubes Art'
-                author='By Manny Gates'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft6}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-            </SimpleGrid>
-          </Flex>
-        </Flex>
-        <Flex
-          flexDirection='column'
-          gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}>
-          <Card px='0px' mb='20px'>
-            <TableTopCreators
-              tableData={tableDataTopCreators}
-              columnsData={tableColumnsTopCreators}
-            />
-          </Card>
-          <Card p='0px'>
-            <Flex
-              align={{ sm: "flex-start", lg: "center" }}
-              justify='space-between'
-              w='100%'
-              px='22px'
-              py='18px'>
-              <Text color={textColor} fontSize='xl' fontWeight='600'>
-                History
-              </Text>
-              <Button variant='action'>See all</Button>
-            </Flex>
+      <Flex direction={{ base: "column", xl: "row" }} mb="20px">
+        <Box
+          bg="gray.200"
+          borderRadius="xl"
+          boxShadow="lg"
+          p="1rem"
+          mr={{ base: 0, xl: "20px" }}
+          mb={{ base: "20px", xl: 0 }}
+          w={{ base: "100%", xl: "60%" }}
+        >
+          <Flex justify="center" align="center" direction="column">
+            <Heading as="h2" size="lg" mb="1rem">
+              Advantage Actor-Critic (A2C) Algorithm
+            </Heading>
+            <Text fontSize="md">
+            The Advantage Actor-Critic (A2C) algorithm is a reinforcement learning algorithm that combines the benefits of both policy gradient and value function methods. A2C has been widely used in algorithmic trading as it can learn to make trading decisions based on market conditions and historical data.
 
-            <HistoryItem
-              name='Colorful Heaven'
-              author='By Mark Benjamin'
-              date='30s ago'
-              image={Nft5}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Abstract Colors'
-              author='By Esthera Jackson'
-              date='58s ago'
-              image={Nft1}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='ETH AI Brain'
-              author='By Nick Wilson'
-              date='1m ago'
-              image={Nft2}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Swipe Circles'
-              author='By Peter Will'
-              date='1m ago'
-              image={Nft4}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Mesh Gradients '
-              author='By Will Smith'
-              date='2m ago'
-              image={Nft3}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='3D Cubes Art'
-              author='By Manny Gates'
-              date='3m ago'
-              image={Nft6}
-              price='0.91 ETH'
-            />
-          </Card>
-        </Flex>
-      </Grid>
-      {/* Delete Product */}
+A2C is particularly useful for algorithmic trading because it can handle continuous state and action spaces, which are commonly found in financial markets. This also allows real-time learning, increased flexibility to changing market conditions, improved trading performance and eventually better risk management.
+              </Text>
+          </Flex>
+        </Box>
+        <Box
+          bg="gray.200"
+          borderRadius="xl"
+          boxShadow="lg"
+          p="1rem"
+          mr={{ base: 0, xl: "20px" }}
+          mb={{ base: "20px", xl: 0 }}
+          w={{ base: "100%", xl: "60%" }}
+        >
+          <Flex justify="center" align="center" direction="column">
+            <Heading as="h2" size="lg" mb="1rem">
+            Proximal Policy Optimization (PPO) Algorithm
+            </Heading>
+            <Text fontSize="md">
+            The Proximal Policy Optimization (PPO) algorithm is again a reinforcement learning algorithm that can be used to develop trading strategies that adapt to changing market conditions and maximize returns while minimizing risk.
+
+PPO is well-suited for algorithmic trading as it can handle large action and state spaces, which are common in financial markets.  This can lead to more efficient trading strategies and improved risk management.
+              </Text>
+          </Flex>
+        </Box>
+        <Box
+          bg="gray.200"
+          borderRadius="xl"
+          boxShadow="lg"
+          p="1rem"
+          mr={{ base: 0, xl: "20px" }}
+          mb={{ base: "20px", xl: 0 }}
+          w={{ base: "100%", xl: "60%" }}
+        >
+          <Flex justify="center" align="center" direction="column">
+            <Heading as="h2" size="lg" mb="1rem">
+            Deep Deterministic Policy Gradient (DDPG) Algorithm
+            </Heading>
+            <Text fontSize="md">
+            The Deep Deterministic Policy Gradient (DDPG) algorithm is a reinforcement learning algorithm that can handle large continuous action and can learn directly from raw data.
+
+DDPG is particularly useful for us because it can learn to make trading decisions based on market conditions and historical data. Additionally, it can learn from high-dimensional data, such as price and volume data. 
+              </Text>
+          </Flex>
+        </Box>
+        <Box
+          bg="gray.200"
+          borderRadius="xl"
+          boxShadow="lg"
+          p="1rem"
+          mb={{ base: "20px", xl: 0 }}
+          w={{ base: "100%", xl: "60%" }}
+        >
+          <Flex justify="center" align="center" direction="column">
+            <Heading as="h2" size="lg" mb="1rem">
+            Twin Delayed Deep Deterministic (TD3) Algorithm
+            </Heading>
+            <Text fontSize="md">The Twin Delayed Deep Deterministic (TD3) algorithm is a reinforcement learning algorithm and is an extension of the Deep Deterministic Policy Gradient (DDPG) algorithm.
+It  uses two critic networks to estimate the value function, which helps to reduce overestimation bias. TD3 has been shown to be effective in environments with noisy or delayed rewards, which are common in financial markets.  This means more a accurate trading strategy, and improved performance.</Text>
+          </Flex>
+        </Box>
+      </Flex>
     </Box>
   );
 }
+
+

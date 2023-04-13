@@ -6,12 +6,11 @@ import { Button, Flex, Link, Text } from "@chakra-ui/react";
 // Assets
 import banner from "assets/img/nfts/NftBanner1.png";
 
-export default function Banner() {
+export default function DesBox() {
   // Chakra Color Mode
   return (
     <Flex
       direction='column'
-      bgImage={banner}
       bgSize='cover'
       py={{ base: "30px", md: "56px" }}
       px={{ base: "30px", md: "64px" }}
@@ -50,24 +49,7 @@ export default function Banner() {
         creating your own!
       </Text>
       <Flex align='center'>
-        <Button
-          bg='white'
-          color='black'
-          _hover={{ bg: "whiteAlpha.900" }}
-          _active={{ bg: "white" }}
-          _focus={{ bg: "white" }}
-          fontWeight='500'
-          fontSize='14px'
-          py='20px'
-          px='27'
-          me='38px'>
-          Discover now
-        </Button>
-        <Link>
-          <Text color='white' fontSize='sm' fontWeight='500'>
-            Watch video
-          </Text>
-        </Link>
+        
       </Flex>
     </Flex>
   );
