@@ -262,7 +262,7 @@ export const lineChartDataTotalSpent = [
   // },
 ];
 
-export const lineChartOptionsTotalSpent = {
+export const lineChartOptionsEquityHistory = {
   chart: {
     toolbar: {
       show: false,

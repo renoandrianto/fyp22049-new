@@ -43,6 +43,8 @@ check_and_make_directories([DATA_SAVE_DIR, TRAINED_MODEL_DIR, TENSORBOARD_LOG_DI
 
 START_DATE = datetime.now() - timedelta(days=30)
 END_DATE = datetime.now() - timedelta(days=1)
+CURRENT_PATH = sys.path[0]
+print("cur path", CURRENT_PATH)
 
 
 def download_and_clean(DP):
@@ -121,7 +123,7 @@ def train_td3(env_train):
     trained_td3.save("./trained_models/td3model-alpaca1mindata")
 
 def train_test_model():
-    data = pd.read_pickle('./datasets/alpaca_1m(30days).pkl')
+    data = pd.read_pickle(CURRENT_PATH + "/datasets/alpaca_1m(30days).pkl")
     data = data.rename(columns={"timestamp":"date"})
     processed = data.copy()
     print(processed)
@@ -158,29 +160,34 @@ def train_test_model():
     e_train_gym = StockTradingEnv(df = train_df.fillna(method="ffill").fillna(method="bfill").replace([np.inf, -np.inf], 0).rename(columns={"VIXY":"vix"}), **env_kwargs)
     env_train, _ = e_train_gym.get_sb_env()
 
-    train_a2c(env_train)
-    train_ppo(env_train)
-    train_ddpg(env_train)
-    train_td3(env_train)
+    # train_a2c(env_train)
+    # train_ppo(env_train)
+    # train_ddpg(env_train)
+    # train_td3(env_train)
+
+    load_agent = DRLAgent(env = env_train)
+    load_a2c = load_agent.get_model("a2c")
+    load_a2c_trained = load_a2c.load(CURRENT_PATH+"/trained_models/a2cmodel-alpaca1mindata")
+    trained_a2c = load_a2c_trained
     
     e_trade_gym = StockTradingEnv(df = test_df, risk_indicator_col='vix', **env_kwargs)
 
     df_account_value_a2c, df_actions_a2c = DRLAgent.DRL_prediction(
         model= trained_a2c, 
         environment = e_trade_gym)
-    df_account_value_a2c.to_pickle('./results/a2c/a2c_test_account_value.pkl')
+    df_account_value_a2c.to_pickle(CURRENT_PATH+'/results/a2c/a2c_test_account_value.pkl')
     
-    df_account_value_ppo, df_actions_ppo = DRLAgent.DRL_prediction(
-        model= trained_ppo, 
-        environment = e_trade_gym)
-    df_account_value_ppo.to_pickle('./results/ppo/ppo_test_account_value.pkl')
+    # df_account_value_ppo, df_actions_ppo = DRLAgent.DRL_prediction(
+    #     model= trained_ppo, 
+    #     environment = e_trade_gym)
+    # df_account_value_ppo.to_pickle('./results/ppo/ppo_test_account_value.pkl')
     
-    df_account_value_ddpg, df_actions_ddpg = DRLAgent.DRL_prediction(
-        model= trained_ddpg, 
-        environment = e_trade_gym)
-    df_account_value_ddpg.to_pickle('./results/ddpg/ddpg_test_account_value.pkl')
+    # df_account_value_ddpg, df_actions_ddpg = DRLAgent.DRL_prediction(
+    #     model= trained_ddpg, 
+    #     environment = e_trade_gym)
+    # df_account_value_ddpg.to_pickle('./results/ddpg/ddpg_test_account_value.pkl')
     
-    df_account_value_td3, df_actions_td3 = DRLAgent.DRL_prediction(
-        model= trained_td3, 
-        environment = e_trade_gym)
-    df_account_value_td3.to_pickle('./results/td3/td3_test_account_value.pkl')
+    # df_account_value_td3, df_actions_td3 = DRLAgent.DRL_prediction(
+    #     model= trained_td3, 
+    #     environment = e_trade_gym)
+    # df_account_value_td3.to_pickle('./results/td3/td3_test_account_value.pkl')

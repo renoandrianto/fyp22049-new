@@ -12,16 +12,53 @@ import {
 import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 import AdminNavbarLinks from "components/navbar/NavbarLinksAdmin";
+import { iex } from "configs1/iex";
+// var AWS = require('aws-sdk');
+// const region = 'us-east-1';
+// AWS.config.loadFromPath('./amazon.json');
+
+// AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+//   IdentityPoolId: "us-east-1:76d3ca5f-7718-4ca0-84b1-1013bf1bbfb3",
+//   Logins: { // optional tokens, used for authenticated login
+//     'graph.facebook.com': 'FBTOKEN',
+//     'www.amazon.com': 'AMAZONTOKEN',
+//     'accounts.google.com': 'GOOGLETOKEN'
+//   }
+// });
+
+// var ec2 = new AWS.EC2({apiVersion: '2016-11-15'});
+
+// var params = {
+//   DryRun: false
+// };
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
+  const ec2DescribeUrl = `${iex.aws_ec2_base_url}/?Action=DescribeInstances`;
+  const [ ec2Running, setEc2Running ] = useState(true); 
 
   useEffect(() => {
+    // console.log(Date.now())
+    // fetch(ec2DescribeUrl), {
+    //   headers: {
+    //     "Authorization": ""
+    //   }
+    // }
+    // ec2.describeInstances(params, function(err, data) {
+    //   if (err) {
+    //     console.log("Error", err.stack);
+    //   } else {
+    //     console.log("Success", JSON.stringify(data));
+    //   }
+    // });
+
     window.addEventListener("scroll", changeNavbar);
 
     return () => {
       window.removeEventListener("scroll", changeNavbar);
     };
+
+    
   });
 
   const { secondary, message, brandText } = props;
@@ -140,6 +177,7 @@ export default function AdminNavbar(props) {
             secondary={props.secondary}
             fixed={props.fixed}
             scrolled={scrolled}
+            ec2Running={ec2Running}
           />
         </Box>
       </Flex>

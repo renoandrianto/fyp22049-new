@@ -21,7 +21,7 @@
 */
 
 // Chakra imports
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Grid, AspectRatio } from "@chakra-ui/react";
 
 // Custom components
 import Banner from "views/admin/profile/components/Banner";
@@ -34,13 +34,17 @@ import Upload from "views/admin/profile/components/Upload";
 // Assets
 import banner from "assets/img/auth/banner.png";
 import avatar from "assets/img/avatars/avatar4.png";
-import React from "react";
+import React, { useState } from "react";
 
 export default function Overview() {
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      <AspectRatio>
+        <iframe maxW='560px' ratio={1} src={`${process.env.PUBLIC_URL}/FinRL_Alpaca.html`}></iframe>
+      </AspectRatio>
       {/* Main Fields */}
-      <Grid
+      {/* <Grid
         templateColumns={{
           base: "1fr",
           lg: "1.34fr 1fr 1.62fr",
@@ -74,8 +78,8 @@ export default function Overview() {
           pe='20px'
           pb={{ base: "100px", lg: "20px" }}
         />
-      </Grid>
-      <Grid
+      </Grid> */}
+      {/* <Grid
         mb='20px'
         templateColumns={{
           base: "1fr",
@@ -112,7 +116,7 @@ export default function Overview() {
             "2xl": "1 / 3 / 2 / 4",
           }}
         />
-      </Grid>
+      </Grid> */}
     </Box>
   );
 }

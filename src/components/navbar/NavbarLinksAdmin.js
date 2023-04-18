@@ -23,11 +23,11 @@ import React from 'react';
 // Assets
 import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
-import { FaEthereum, FaCheckCircle } from 'react-icons/fa';
+import { FaEthereum, FaCheckCircle, FaRegStopCircle } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 export default function HeaderLinks(props) {
-	const { secondary } = props;
+	const { secondary, ec2Running } = props;
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
 	let menuBg = useColorModeValue('white', 'navy.800');
@@ -64,9 +64,9 @@ export default function HeaderLinks(props) {
 				align="center"
 				ms="auto">
 				<Flex align="center" justify="center" bg={ethBox} h="29px" w="29px" borderRadius="30px" me="7px">
-					<Icon color={"green"} w="14px" h="14px" as={FaCheckCircle} />
+					<Icon color={ec2Running ? "green" : "red"} w="14px" h="14px" as={ec2Running ? FaCheckCircle : FaRegStopCircle} />
 				</Flex>
-				<Text pe="10px">Running</Text>
+				<Text pe="10px">{ec2Running ? "Running" : "Stopped"}</Text>
 			</Flex>
 			<Flex
 				bg={ethBg}

@@ -27,7 +27,7 @@ import ComplexTable from "views/admin/default/components/ComplexTable";
 import DailyTraffic from "views/admin/default/components/DailyTraffic";
 import PieCard from "views/admin/default/components/PieCard";
 import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
+import EquityHistory from "views/admin/default/components/EquityHistory";
 import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
 import {
   columnsDataCheck,
@@ -70,7 +70,7 @@ export default function UserReports() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setPortHistory(data);
       });
   };
@@ -84,7 +84,7 @@ export default function UserReports() {
     })
     .then((response)=>response.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
         setAccount(data);
     });
     // // Fetch portfolio history
@@ -110,7 +110,7 @@ export default function UserReports() {
     })
     .then((response)=>response.json())
     .then((data) => {
-        console.log("positions", data);
+        // console.log("positions", data);
         setPositions(data);
     });
     // Fetch orders
@@ -122,7 +122,7 @@ export default function UserReports() {
     })
     .then((response)=>response.json())
     .then((data) => {
-        console.log("orders", data);
+        // console.log("orders", data);
         setOrders(data.map(order => {order.amount = String(Number(order.filled_avg_price) * Number(order.filled_qty)); return order}));
         // setOrders(data);
     });
@@ -218,7 +218,7 @@ export default function UserReports() {
         /> */}
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
-        <TotalSpent
+        <EquityHistory
           data={portHistory}
           dailyUrl={portHistoryUrlD}
           monthlyUrl={portHistoryUrl}
