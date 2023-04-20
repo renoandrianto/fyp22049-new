@@ -41,7 +41,7 @@ from FinRL.finrl.config import (
 check_and_make_directories([DATA_SAVE_DIR, TRAINED_MODEL_DIR, TENSORBOARD_LOG_DIR, RESULTS_DIR])
 
 
-START_DATE = datetime.now() - timedelta(days=30)
+START_DATE = datetime.now() - timedelta(days=31)
 END_DATE = datetime.now() - timedelta(days=1)
 
 

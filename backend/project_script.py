@@ -64,12 +64,38 @@ from datetime import timedelta
 START_DATE = datetime.now() - timedelta(days=30)
 END_DATE = datetime.now() - timedelta(days=1)
 
-from project_helpers.download_clean_data import download_and_clean, train_test_model
+from project_helpers.download_data_train_models import download_and_clean, train_test_model
+from project_helpers.live_trading import AlpacaPaperTrading
 
+data = pd.read_pickle('./datasets/alpaca_1m_(30days).pkl')
+tickers = list(data["tic"].unique())
+ERL_PARAMS = {"learning_rate": 3e-6,"batch_size": 2048,"gamma":  0.985,
+        "seed":312,"net_dimension":[128,64], "target_step":5000, "eval_gap":30,
+        "eval_times":1} 
+action_dim = len(data["tic"].unique())
+API_BASE_URL = 'https://paper-api.alpaca.markets'
+state_space = 1 + 2 * action_dim + len(INDICATORS) * action_dim
+
+paper_trading_erl = AlpacaPaperTrading(ticker_list = tickers, 
+                                       time_interval = '1Min', 
+                                       drl_lib = 'stable_baselines3', 
+                                       agent = 'td3', 
+                                       cwd = './trained_models/', 
+                                       net_dim = ERL_PARAMS['net_dimension'], 
+                                       state_dim = state_space, 
+                                       action_dim= action_dim, 
+                                       API_KEY = API_KEY, 
+                                       API_SECRET = API_SECRET, 
+                                       API_BASE_URL = API_BASE_URL, 
+                                       tech_indicator_list = INDICATORS, 
+                                       turbulence_thresh=30, 
+                                       max_stock=1e2)
+
+paper_trading_erl.run()
 # while True:
 #     download_and_clean(DP)
 # download_and_clean(DP)
-train_test_model()
+# train_test_model()
 
 # while True:
 #     if datetime.now()==
