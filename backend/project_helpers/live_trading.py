@@ -13,11 +13,6 @@ import gym
 import threading
 # from finrl.meta.data_processors.processor_alpaca import AlpacaProcessor
 import alpaca_trade_api as tradeapi
-import time
-import pandas as pd
-import numpy as np
-import torch
-import gym
 from datetime import timedelta
 
 
@@ -354,7 +349,7 @@ class AlpacaProcessor:
             barset["tic"] = tic
             barset = barset.reset_index()
             data_df = pd.concat([data_df, barset])
-        print(data_df)
+        # print(data_df)
         data_df = data_df.reset_index(drop=True)
         start_time = data_df.timestamp.min()
         end_time = data_df.timestamp.max()
@@ -493,11 +488,9 @@ class AlpacaPaperTrading():
         self.state_dim = state_dim
 
         state = self.get_state()
-        print(state)
         print(ticker_list, len(ticker_list))
         buy_cost_list = [0] * len(ticker_list)
         sell_cost_list = [0] * len(ticker_list)
-        print(state_dim)
         print(len(INDICATORS))
         env_kwargs = {
             "hmax": 100,
@@ -511,7 +504,7 @@ class AlpacaPaperTrading():
             "action_space": len(ticker_list),
             "reward_scaling": 1e-4
         }
-        e_trade_gym = StockTradingEnv(df = state, turbulence_threshold = 30, **env_kwargs)
+        e_trade_gym = StockTradingEnv(df = state, turbulence_threshold = 70, **env_kwargs)
         env_trade, obs_trade = e_trade_gym.get_sb_env()
         if agent=="a2c":
             if drl_lib == 'stable_baselines3':
@@ -646,7 +639,7 @@ class AlpacaPaperTrading():
     
     def trade(self):
         state = self.get_state()
-        
+        print(state)
         if self.drl_lib == 'elegantrl':
             with torch.no_grad():
                 s_tensor = torch.as_tensor((state,), device=self.device)
@@ -670,7 +663,7 @@ class AlpacaPaperTrading():
                     "action_space": self.action_dim,
                     "reward_scaling": 1e-4
                 }
-                e_trade_gym = StockTradingEnv(df = state, turbulence_threshold = 30, **env_kwargs)
+                e_trade_gym = StockTradingEnv(df = state, turbulence_threshold = 70, **env_kwargs)
                 env_trade, obs_trade = e_trade_gym.get_sb_env()
                 env_trade.reset()
                 action, _states = self.model.predict(obs_trade, deterministic=True)
@@ -684,6 +677,7 @@ class AlpacaPaperTrading():
         if self.turbulence_bool == 0:
             min_action = 0  # stock_cd
             threads = []
+            print(action)
             for index in np.where(action[0] < -min_action)[0]:  # sell_index:
                 print(f"stocks[{index}] = {self.stocks[index]}")
                 print(f"action[{index}] = {-action[0][index]}")
