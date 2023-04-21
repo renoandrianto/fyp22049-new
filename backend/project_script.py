@@ -67,7 +67,8 @@ END_DATE = datetime.now() - timedelta(days=1)
 from project_helpers.download_data_train_models import download_and_clean, train_test_model
 from project_helpers.live_trading import AlpacaPaperTrading
 
-data = pd.read_pickle(os.getcwd()+'/datasets/alpaca_1m_(30days).pkl')
+curr_path = os.path.abspath(os.path.dirname(__file__))
+data = pd.read_pickle(os.path.join(curr_path, "./datasets/alpaca_1m_(30days).pkl"))
 tickers = list(data["tic"].unique())
 ERL_PARAMS = {"learning_rate": 3e-6,"batch_size": 2048,"gamma":  0.985,
         "seed":312,"net_dimension":[128,64], "target_step":5000, "eval_gap":30,
@@ -80,7 +81,7 @@ paper_trading_erl = AlpacaPaperTrading(ticker_list = tickers,
                                        time_interval = '1Min', 
                                        drl_lib = 'stable_baselines3', 
                                        agent = 'td3', 
-                                       cwd = os.getcwd()+'/trained_models/', 
+                                       cwd = os.path.join(curr_path, "./trained_models/"), 
                                        net_dim = ERL_PARAMS['net_dimension'], 
                                        state_dim = state_space, 
                                        action_dim= action_dim, 
