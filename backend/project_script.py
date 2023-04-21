@@ -67,7 +67,7 @@ END_DATE = datetime.now() - timedelta(days=1)
 from project_helpers.download_data_train_models import download_and_clean, train_test_model
 from project_helpers.live_trading import AlpacaPaperTrading
 
-data = pd.read_pickle('./datasets/alpaca_1m_(30days).pkl')
+data = pd.read_pickle(os.getcwd()+'/datasets/alpaca_1m_(30days).pkl')
 tickers = list(data["tic"].unique())
 ERL_PARAMS = {"learning_rate": 3e-6,"batch_size": 2048,"gamma":  0.985,
         "seed":312,"net_dimension":[128,64], "target_step":5000, "eval_gap":30,
