@@ -29,6 +29,5 @@ yarn-error.log*
 ElegantRL
 FinRL
 FinRL-Meta
-datasets
 __pycache__
 results

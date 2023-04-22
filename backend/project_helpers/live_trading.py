@@ -39,6 +39,7 @@ from FinRL.finrl.config import (
 )
 
 from FinRL.finrl.meta.env_stock_trading.env_stocktrading import StockTradingEnv
+from stable_baselines3.common.vec_env import DummyVecEnv
 
 
 class AlpacaProcessor:
@@ -345,7 +346,9 @@ class AlpacaProcessor:
         data_df = pd.DataFrame()
         ticker_list = ticker_list+["VIXY"]
         for tic in ticker_list:
-            barset = self.api.get_bars([tic], time_interval, end=datetime.datetime.now(datetime.timezone.utc).isoformat(), limit=limit).df  # [tic]
+            barset = self.api.get_bars([tic], time_interval, start=(datetime.datetime.now()-timedelta(days=1)).replace(tzinfo=pytz.UTC).isoformat(), 
+                                        end=datetime.datetime.now(datetime.timezone.utc).isoformat(), limit=limit).df  # [tic]
+            latest = self.api.get_latest_bar(tic)
             barset["tic"] = tic
             barset = barset.reset_index()
             data_df = pd.concat([data_df, barset])
@@ -419,24 +422,41 @@ class AlpacaProcessor:
 
         new_df = new_df.reset_index()
         new_df = new_df.rename(columns={"index": "timestamp"})
-
+        
         df = self.add_technical_indicator(new_df, tech_indicator_list)
+        print(df)
         df = self.add_turbulence(df)
-        # df = self.add_vix(df)
-        # df["VIXY"] = 0
-        # price_array, tech_array, turbulence_array = self.df_to_array(
-        #     df, tech_indicator_list, if_vix=True
-        # )
-        # latest_price = price_array[-1]
-        # latest_tech = tech_array[-1]
         vix_df = df[df['tic']=='VIXY'][["timestamp", "close"]].rename(columns={"close":"VIXY"})
         df = df[~(df['tic']=='VIXY')]
         df = df.merge(vix_df, on="timestamp").rename(columns={"timestamp":"date"})
         df = data_split(df, start_time, end_time+timedelta(1))
         turb_df = self.api.get_bars(["VIXY"], time_interval, end=datetime.datetime.now(datetime.timezone.utc).isoformat(), limit=1).df
+        # latest_turb = self.api.get_latest_bar("VIXY")
+        # turb_df = pd.DataFrame(
+        #         latest_turb, columns=('t', 'o', 'h', 'l', 'c', 'v'),)
+        # alias = {
+        #     't': 'time',
+        #     'o': 'open',
+        #     'h': 'high',
+        #     'l': 'low',
+        #     'c': 'close',
+        #     'v': 'volume',
+        # }
+        # turb_df.columns = [alias[c] for c in turb_df.columns]
+        # turb_df.set_index('time', inplace=True)
+        # if not turb_df.empty:
+        #     turb_df.index = pd.to_datetime(
+        #         (turb_df.index * 1e9).astype('int64'), utc=True,
+        #     ).tz_convert(NY)
+        # else:
+        #     turb_df.index = pd.to_datetime(
+        #         turb_df.index, utc=True
+        #     )
+        # print(turb_df)
+        # turb_df = df.iloc[-1,"VIXY"]
+        # print(turb_df)
         latest_turb = turb_df["close"].values
         return df, latest_turb
-        # return latest_price, latest_tech, latest_turb
 
 
 class AlpacaPaperTrading():
@@ -487,11 +507,48 @@ class AlpacaPaperTrading():
         self.action_dim = action_dim
         self.state_dim = state_dim
 
-        state = self.get_state()
-        print(ticker_list, len(ticker_list))
+        try:
+            state = self.get_state()  
+        except:
+            state = {'date':[]}
+            state.update({key:[] for key in ['date', 'open', 'high', 'low', 'close', 'volume', 'tic'] + tech_indicator_list + ['vix', 'turbulence']})
+            print(state)
+            for ticker in ticker_list:
+                now = datetime.datetime.now()
+                state['date'].append(now)
+                state['open'].append(0)
+                state['high'].append(0)
+                state['low'].append(0)
+                state['close'].append(0)
+                state['volume'].append(0)
+                state['tic'].append(ticker)
+                for tech in tech_indicator_list:
+                    state[tech].append(0)
+                state['vix'].append(0)
+                state['turbulence'].append(0)
+            state = pd.DataFrame(state, index=[0]*len(ticker_list))
+        if state.empty:
+            state = {'date':[]}
+            state.update({key:[] for key in ['date', 'open', 'high', 'low', 'close', 'volume', 'tic'] + tech_indicator_list + ['vix', 'turbulence']})
+            for ticker in ticker_list:
+                now = datetime.datetime.now()
+                if ticker in state:
+                    state['date'].append(now)
+                    state['open'].append(0)
+                    state['high'].append(0)
+                    state['low'].append(0)
+                    state['close'].append(0)
+                    state['volume'].append(0)
+                    state['tic'].append(ticker)
+                    for tech in tech_indicator_list:
+                        state[tech].append(0)
+                    state['vix'].append(0)
+                    state['turbulence'].append(0)
+            state = pd.DataFrame(state, index=[0]*len(ticker_list))
+        print(state)
+        print(ticker_list, len(ticker_list))    
         buy_cost_list = [0] * len(ticker_list)
         sell_cost_list = [0] * len(ticker_list)
-        print(len(INDICATORS))
         env_kwargs = {
             "hmax": 100,
             "initial_amount": 0,
@@ -504,8 +561,8 @@ class AlpacaPaperTrading():
             "action_space": len(ticker_list),
             "reward_scaling": 1e-4
         }
-        e_trade_gym = StockTradingEnv(df = state, turbulence_threshold = 70, **env_kwargs)
-        env_trade, obs_trade = e_trade_gym.get_sb_env()
+        e_trade_gym = StockTradingEnv(df = state, turbulence_threshold = 30, **env_kwargs)
+        self.agent = agent
         if agent=="a2c":
             if drl_lib == 'stable_baselines3':
                 try:
@@ -575,56 +632,56 @@ class AlpacaPaperTrading():
         return latency
         
     def run(self):
-        orders = self.alpaca.list_orders(status="open")
-        for order in orders:
-          self.alpaca.cancel_order(order.id)
-    
-        # Wait for market to open.
-        print("Waiting for market to open...")
-        self.awaitMarketOpen()
-        print("Market opened.")
 
         while True:
+            orders = self.alpaca.list_orders(status="open")
+            for order in orders:
+                self.alpaca.cancel_order(order.id)
+        
+            # Wait for market to open.
+            print("Waiting for market to open...")
+            self.awaitMarketOpen()
+            print("Market opened.")
 
-          # Figure out when the market will close so we can prepare to sell beforehand.
-          clock = self.alpaca.get_clock()
-          closingTime = clock.next_close.replace(tzinfo=datetime.timezone.utc).timestamp()
-          currTime = clock.timestamp.replace(tzinfo=datetime.timezone.utc).timestamp()
-          self.timeToClose = closingTime - currTime
-    
-          if(self.timeToClose < (60)):
-            # Close all positions when 1 minutes til market close.
-            print("Market closing soon. Stop trading.")
-            break
-            
-            '''# Close all positions when 1 minutes til market close.
-            print("Market closing soon.  Closing positions.")
+            # Figure out when the market will close so we can prepare to sell beforehand.
+            clock = self.alpaca.get_clock()
+            closingTime = clock.next_close.replace(tzinfo=datetime.timezone.utc).timestamp()
+            currTime = clock.timestamp.replace(tzinfo=datetime.timezone.utc).timestamp()
+            self.timeToClose = closingTime - currTime
+        
+            if(self.timeToClose < (60)):
+                # Close all positions when 1 minutes til market close.
+                print("Market closing soon. Stop trading.")
+                # break
+                
+                '''# Close all positions when 1 minutes til market close.
+                print("Market closing soon.  Closing positions.")
 
-            threads = []
-            positions = self.alpaca.list_positions()
-            for position in positions:
-              if(position.side == 'long'):
-                orderSide = 'sell'
-              else:
-                orderSide = 'buy'
-              qty = abs(int(float(position.qty)))
-              respSO = []
-              tSubmitOrder = threading.Thread(target=self.submitOrder(qty, position.symbol, orderSide, respSO))
-              tSubmitOrder.start()
-              threads.append(tSubmitOrder)    # record thread for joining later
+                threads = []
+                positions = self.alpaca.list_positions()
+                for position in positions:
+                if(position.side == 'long'):
+                    orderSide = 'sell'
+                else:
+                    orderSide = 'buy'
+                qty = abs(int(float(position.qty)))
+                respSO = []
+                tSubmitOrder = threading.Thread(target=self.submitOrder(qty, position.symbol, orderSide, respSO))
+                tSubmitOrder.start()
+                threads.append(tSubmitOrder)    # record thread for joining later
 
-            for x in threads:   #  wait for all threads to complete
-                x.join()     
-            # Run script again after market close for next trading day.
-            print("Sleeping until market close (15 minutes).")
-            time.sleep(60 * 15)'''
-            
-          else:
-            self.trade()
-            last_equity = float(self.alpaca.get_account().last_equity)
-            cur_time = time.time()
-            self.equities.append([cur_time,last_equity])
-            time.sleep(self.time_interval)
+                for x in threads:   #  wait for all threads to complete
+                    x.join()     
+                # Run script again after market close for next trading day.
+                print("Sleeping until market close (15 minutes).")
+                time.sleep(60 * 15)'''
+                
+            else:
+                self.trade()
+                last_equity = float(self.alpaca.get_account().last_equity)
+                cur_time = time.time()
+                self.equities.append([cur_time,last_equity])
+                time.sleep(self.time_interval)
             
     def awaitMarketOpen(self):
         isOpen = self.alpaca.get_clock().is_open
@@ -742,12 +799,11 @@ class AlpacaPaperTrading():
         turbulence_bool = 1 if turbulence >= self.turbulence_thresh else 0
         self.turbulence_bool = turbulence_bool
         stocks_df = stocks_df.fillna(method="ffill").fillna(method="bfill").replace([np.inf, -np.inf], 0).rename(columns={"VIXY":"vix"})
-        # stocks_df['date'] = stocks_df['date'].dt.tz_localize(None)
-        # turbulence = (self.sigmoid_sign(turbulence, self.turbulence_thresh) * 2 ** -5).astype(np.float32)
-        
-        # tech = tech * 2 ** -7
+
         positions = self.alpaca.list_positions()
-        # # print(positions)
+        print("turbulence:",turbulence)
+        print("turbulence bool:",turbulence_bool)
+        print("positions:",positions)
         stocks = [0] * len(self.stockUniverse)
         for position in positions:
             ind = self.stockUniverse.index(position.symbol)

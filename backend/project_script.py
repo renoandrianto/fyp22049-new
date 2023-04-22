@@ -64,11 +64,11 @@ from datetime import timedelta
 START_DATE = datetime.now() - timedelta(days=30)
 END_DATE = datetime.now() - timedelta(days=1)
 
-from project_helpers.download_data_train_models import download_and_clean, train_test_model
+from project_helpers.download_data_train_models import download_and_clean, split_data_train_test,train_test_model
 from project_helpers.live_trading import AlpacaPaperTrading
 
 curr_path = os.path.abspath(os.path.dirname(__file__))
-data = pd.read_pickle(os.path.join(curr_path, "./datasets/alpaca_1m_(30days).pkl"))
+data = pd.read_pickle(os.path.join(curr_path, "./datasets/alpaca_1m(30days).pkl"))
 tickers = list(data["tic"].unique())
 ERL_PARAMS = {"learning_rate": 3e-6,"batch_size": 2048,"gamma":  0.985,
         "seed":312,"net_dimension":[128,64], "target_step":5000, "eval_gap":30,
@@ -92,7 +92,9 @@ paper_trading_erl = AlpacaPaperTrading(ticker_list = tickers,
                                        turbulence_thresh=30, 
                                        max_stock=1e2)
 
-paper_trading_erl.run()
+split_data_train_test()
+train_test_model()
+# paper_trading_erl.run()
 # while True:
 #     download_and_clean(DP)
 # download_and_clean(DP)
