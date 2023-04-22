@@ -93,7 +93,7 @@ export default function LineChart(props) {
   });
 
   useEffect(()=>{
-    console.log(props)
+    // console.log(props)
     setChartData(props.chartData);
     setChartOptions({...chartOptions, 
       xaxis: {

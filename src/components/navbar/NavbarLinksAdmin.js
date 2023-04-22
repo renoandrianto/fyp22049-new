@@ -23,11 +23,32 @@ import React from 'react';
 // Assets
 import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
-import { FaEthereum, FaCheckCircle, FaRegStopCircle } from 'react-icons/fa';
+import { FaEthereum, FaCheckCircle, FaRegStopCircle, FaClock, FaPlay, FaPause } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 export default function HeaderLinks(props) {
-	const { secondary, ec2Running } = props;
+	const { secondary, ec2Running, startInstance, stopInstance } = props;
+	let iconColor = "grey"
+	let statusIcon = null;
+	// console.log(ec2Running)
+	// console.log(startInstance)
+	switch(ec2Running) {
+		case "running":
+			iconColor = "green"
+			statusIcon = FaPause
+			break;
+		case "stopped":
+			iconColor = "red"
+			statusIcon = FaPlay
+			break;
+		case "stopping":
+		case "pending":
+			iconColor = "grey"
+			statusIcon = FaClock
+			break;
+		default:
+			iconColor = "grey"
+	}
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
 	let menuBg = useColorModeValue('white', 'navy.800');
@@ -53,20 +74,24 @@ export default function HeaderLinks(props) {
 			borderRadius="30px"
 			boxShadow={shadow}>
 			{/* <SearchBar mb={secondary ? { base: '10px', md: 'unset' } : 'unset'} me="10px" borderRadius="30px" /> */}
+			
 			<Container pe="1px" w="max-content" color={ethColor} fontSize="sm" fontWeight="700" me="6px">
 				Trading Status:
 			</Container>
 			<Flex
-				bg={ethBg}
+				bg={iconColor}
 				borderRadius="30px"
 				me="12px"
 				p="6px"
 				align="center"
 				ms="auto">
-				<Flex align="center" justify="center" bg={ethBox} h="29px" w="29px" borderRadius="30px" me="7px">
-					<Icon color={ec2Running ? "green" : "red"} w="14px" h="14px" as={ec2Running ? FaCheckCircle : FaRegStopCircle} />
-				</Flex>
-				<Text pe="10px">{ec2Running ? "Running" : "Stopped"}</Text>
+				<Button isDisabled={ec2Running=="stopping" ? true : ec2Running=="pending"? true : false} onClick={ec2Running == "running"? stopInstance: startInstance} mr="8px">
+					<Icon  w="14px" h="14px" as={statusIcon} />
+				</Button>
+				{/* <Flex align="center" justify="center" bg={ethBox} h="29px" w="29px" borderRadius="30px" me="7px">
+					<Icon color={iconColor} w="14px" h="14px" as={statusIcon} />
+				</Flex> */}
+				<Text color={ethBg} pe="10px">{ec2Running.charAt(0).toUpperCase() + ec2Running.slice(1)}</Text>
 			</Flex>
 			<Flex
 				bg={ethBg}
@@ -77,7 +102,7 @@ export default function HeaderLinks(props) {
 				align="center"
 				me="6px">
 				<Flex align="center" justify="center" bg={ethBox} h="29px" w="29px" borderRadius="30px" me="7px">
-					<Icon color={ethColor} w="9px" h="14px" as={FaEthereum} />
+					<Icon color={"green"} w="9px" h="14px" as={FaEthereum} />
 				</Flex>
 				<Text w="max-content" color={ethColor} fontSize="sm" fontWeight="700" me="6px">
 					1,924

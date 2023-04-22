@@ -30,7 +30,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
 });
 
 export default function CheckTable(props) {
-  console.log("table props", props);
+  // console.log("table props", props);
   // const [ columnsData, setColumnsData ] = useState(props.columnsData);
   // const [ tableData, setTableData ] = useState(props.tableData);
   const { columnsData, tableData } = props;
