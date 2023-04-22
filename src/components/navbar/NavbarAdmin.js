@@ -13,53 +13,107 @@ import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 import AdminNavbarLinks from "components/navbar/NavbarLinksAdmin";
 import { iex } from "configs1/iex";
-// var AWS = require('aws-sdk');
-// const region = 'us-east-1';
-// AWS.config.loadFromPath('./amazon.json');
+import AWS from 'aws-sdk';
 
-// AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-//   IdentityPoolId: "us-east-1:76d3ca5f-7718-4ca0-84b1-1013bf1bbfb3",
-//   Logins: { // optional tokens, used for authenticated login
-//     'graph.facebook.com': 'FBTOKEN',
-//     'www.amazon.com': 'AMAZONTOKEN',
-//     'accounts.google.com': 'GOOGLETOKEN'
-//   }
-// });
+const region = 'us-east-1';
 
-// var ec2 = new AWS.EC2({apiVersion: '2016-11-15'});
 
-// var params = {
-//   DryRun: false
-// };
+AWS.config.update({
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+  region: region,
+});
+
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
-  const ec2DescribeUrl = `${iex.aws_ec2_base_url}/?Action=DescribeInstances`;
-  const [ ec2Running, setEc2Running ] = useState(true); 
+  const ec2DescribeUrl = `${process.env.REACT_APP_AWS_EC2_BASE_URL}/?Action=DescribeInstances`;
+  // console.log(process.env.REACT_APP_AWS_EC2_INSTANCE_ID);
+  const [ ec2Running, setEc2Running ] = useState(""); 
+  const ec2 = new AWS.EC2();
+  
+
+  function startInstance() {
+    console.log("STARTING INSTANCE");
+    const params = {
+      InstanceIds: ["i-03ebbf37ae9044c57"]
+    };
+    ec2.startInstances(params, (err,data) => {
+      if (err) {
+        console.log(err, err.stack);
+      } else {
+        getInstanceStatus();
+        // setEc2Running("running");
+        console.log(data);
+        ec2.waitFor("instanceRunning", (err, data) => {
+          if (err) {
+            console.log(err, err.stack)
+          } // an error occurred
+          else {
+            console.log("STARTED");
+            getInstanceStatus();
+            console.log(data); 
+          }    
+        });
+      }
+    })
+  }
+
+  function stopInstance() {
+    console.log("STOPPING INSTANCE");
+    const params = {
+      InstanceIds: ["i-03ebbf37ae9044c57"]
+    };
+    ec2.stopInstances(params, (err,data) => {
+      if (err) {
+        console.log(err, err.stack);
+      } else {
+        getInstanceStatus();
+        // setEc2Running("stopped");
+        console.log(data);
+        ec2.waitFor("instanceStopped", (err, data) => {
+          if (err) {
+            console.log(err, err.stack)
+          } // an error occurred
+          else {
+            console.log("STOPPED");
+            getInstanceStatus();
+            console.log(data); 
+          }    
+        });
+      }
+    })
+  }
+
+  function getInstanceStatus() {
+    ec2.describeInstances( (err, data) => {
+      if (err) {
+        console.log(err, err.stack);
+      } else {
+        console.log(data.Reservations[0].Instances[0].State.Name);
+        setEc2Running(data.Reservations[0].Instances[0].State.Name)
+      }
+    });
+  }
 
   useEffect(() => {
-    // console.log(Date.now())
-    // fetch(ec2DescribeUrl), {
-    //   headers: {
-    //     "Authorization": ""
-    //   }
-    // }
-    // ec2.describeInstances(params, function(err, data) {
-    //   if (err) {
-    //     console.log("Error", err.stack);
-    //   } else {
-    //     console.log("Success", JSON.stringify(data));
-    //   }
-    // });
-
+    var params = {
+        Filters: [
+        {
+          Name: 'rltrading',
+        }
+      ]
+    }
+    getInstanceStatus();
+    console.log("THIS IS RAN");
     window.addEventListener("scroll", changeNavbar);
 
     return () => {
       window.removeEventListener("scroll", changeNavbar);
     };
-
     
-  });
+    
+  },[]);
 
   const { secondary, message, brandText } = props;
 
@@ -178,6 +232,9 @@ export default function AdminNavbar(props) {
             fixed={props.fixed}
             scrolled={scrolled}
             ec2Running={ec2Running}
+            setEc2Running={setEc2Running}
+            startInstance={startInstance}
+            stopInstance={stopInstance}
           />
         </Box>
       </Flex>

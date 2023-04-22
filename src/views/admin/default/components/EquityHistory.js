@@ -54,7 +54,7 @@ export default function EquityHistory(props) {
   };
   
   useEffect(() => {
-    console.log("Changed Chart", props);
+    // console.log("Changed Chart", props);
     setChartData(props);
   },[props]);
 
