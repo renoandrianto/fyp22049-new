@@ -1,7 +1,7 @@
 from __future__ import annotations
 # Import flask and datetime module for showing date and time
 from flask import Flask
-from flask_cors import CORS
+# from flask_cors import CORS
 from flask import Response
 import datetime
   
@@ -68,8 +68,8 @@ END_DATE = datetime.now() - timedelta(days=1)
   
 # Initializing flask app
 app = Flask(__name__)
-CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+# CORS(app)
+# app.config['CORS_HEADERS'] = 'Content-Type'
 
 curr_path = os.path.abspath(os.path.dirname(__file__))
   
@@ -207,6 +207,7 @@ def get_backtesting_data():
     td3_acc_value = td3_acc_value.set_index(td3_acc_value.columns[0])
     START_DATE_TEST = a2c_acc_value.index.min()
     END_DATE_TEST = a2c_acc_value.index.max()
+    print(START_DATE_TEST, END_DATE_TEST)
     INITIAL_AMOUNT = a2c_acc_value.iloc[0]["account_value"]
     dji_df = YahooDownloader(start_date=START_DATE_TEST, end_date=END_DATE_TEST, ticker_list=["^DJI"]).fetch_data()
     dji_df = dji_df[['date', 'close']]
@@ -253,5 +254,5 @@ def get_backtesting_data():
       
 # Running app
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.50.99')
+    app.run(debug=True, host='192.168.50.135')
     # app.run(debug=True)

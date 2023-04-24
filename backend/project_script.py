@@ -69,6 +69,8 @@ from project_helpers.live_trading import AlpacaPaperTrading
 
 curr_path = os.path.abspath(os.path.dirname(__file__))
 
+data = pd.read_pickle(curr_path+"/datasets/alpaca_1m(30days).pkl")
+# print(data)
 download_and_clean(DP)
 split_data_train_test()
 train_test_model()

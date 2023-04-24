@@ -42,7 +42,7 @@ check_and_make_directories([DATA_SAVE_DIR, TRAINED_MODEL_DIR, TENSORBOARD_LOG_DI
 
 
 START_DATE = datetime.now() - timedelta(days=31)
-END_DATE = datetime.now() - timedelta(days=1)
+END_DATE = datetime.now()
 CURRENT_PATH = sys.path[0]
 print("cur path", CURRENT_PATH)
 
@@ -128,10 +128,10 @@ def split_data_train_test():
     processed = data.copy()
     print(processed)
     processed['date'] = processed['date'].dt.tz_localize(None)
-    START_DATE_TRAIN = START_DATE
+    START_DATE_TRAIN = processed['date'].min()
     END_DATE_TRAIN = START_DATE+timedelta(24)
     START_DATE_TEST = START_DATE+timedelta(24)
-    END_DATE_TEST = END_DATE
+    END_DATE_TEST = processed['date'].max()
     train_df = data_split(processed, START_DATE_TRAIN, END_DATE_TRAIN)
     test_df = data_split(processed, START_DATE_TEST, END_DATE_TEST)
     # save both the train and test datasets
